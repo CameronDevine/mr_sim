@@ -28,11 +28,12 @@ class TestRound(unittest.TestCase):
         self.assertEqual(round.radius, 6)
 
     def test_base(self):
-        round = mr_sim.Round(1, 1, radius=1)
+        round = mr_sim.Round(1, 1, radius=1, dt=5)
         self.assertTrue(hasattr(round, "X"))
         self.assertTrue(hasattr(round, "Y"))
         self.assertTrue(hasattr(round, "profile"))
         self.assertTrue(hasattr(round, "dt"))
+        self.assertEqual(round.dt, 5)
 
     def test_shape(self):
         round = mr_sim.Round(6, 6, radius=2)
@@ -67,11 +68,12 @@ class TestSquare(unittest.TestCase):
         self.assertAlmostEqual(square.Iy, 52.08333, 5)
 
     def test_base(self):
-        square = mr_sim.Square(1, 1, width=1)
+        square = mr_sim.Square(1, 1, width=1, dt=4)
         self.assertTrue(hasattr(square, "X"))
         self.assertTrue(hasattr(square, "Y"))
         self.assertTrue(hasattr(square, "profile"))
         self.assertTrue(hasattr(square, "dt"))
+        self.assertEqual(square.dt, 4)
 
     def test_shape(self):
         square = mr_sim.Square(6, 6, width=2)
@@ -118,11 +120,12 @@ class TestRectangle(unittest.TestCase):
         self.assertAlmostEqual(rectangle.Iy, 72)
 
     def test_base(self):
-        rectangle = mr_sim.Rectangular(1, 1, width=1, height=1)
+        rectangle = mr_sim.Rectangular(1, 1, width=1, height=1, dt=0.2)
         self.assertTrue(hasattr(rectangle, "X"))
         self.assertTrue(hasattr(rectangle, "Y"))
         self.assertTrue(hasattr(rectangle, "profile"))
         self.assertTrue(hasattr(rectangle, "dt"))
+        self.assertEqual(rectangle.dt, 0.2)
 
     def test_shape(self):
         rectangle = mr_sim.Rectangular(6, 6, width=4, height=3)

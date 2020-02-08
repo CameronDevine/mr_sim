@@ -30,8 +30,9 @@ class TestPreston(unittest.TestCase):
         )
 
     def test_base(self):
-        preston = mr_sim.Preston(1, 1)
+        preston = mr_sim.Preston(1, 1, dt=0.1)
         self.assertTrue(hasattr(preston, "X"))
         self.assertTrue(hasattr(preston, "Y"))
         self.assertTrue(hasattr(preston, "profile"))
         self.assertTrue(hasattr(preston, "dt"))
+        self.assertEqual(preston.dt, 0.1)
