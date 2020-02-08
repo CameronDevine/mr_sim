@@ -34,8 +34,8 @@ simulation = Simulation(
     size, size, radius=R, dt=dt, dx=0.005, dy=0.005, auto_velocity=True
 )
 
-simulation.set_speed(1)
-simulation.set_force(1)
+simulation.set_speed(100)
+simulation.set_force(5)
 
 for location in path:
     simulation.set_location(*location)
