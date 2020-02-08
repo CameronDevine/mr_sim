@@ -3,6 +3,7 @@ import numpy as np
 
 __all__ = ["Orbital", "Belt", "Rotary"]
 
+
 class Orbital(Base):
     def __init__(self, *args, eccentricity=None, **kwargs):
         super().__init__(*args, **kwargs)

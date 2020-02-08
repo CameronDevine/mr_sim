@@ -14,3 +14,5 @@ dist:
 
 clean:
 	rm -rf dist build mr_sim.egg-info
+	find . -type f -name *.pyc -delete
+	find . -type d -name __pycache__ -delete
