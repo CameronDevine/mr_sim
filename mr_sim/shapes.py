@@ -33,14 +33,17 @@ class Rectangular(Base):
         if height is None:
             raise ValueError("Tool height must be set.")
         super().__init__(*args, **kwargs)
-        self.set_size(width, height)
+        self._set_size(width, height)
 
-    def set_size(self, width, height):
+    def _set_size(self, width, height):
         self.width = width
         self.height = height
         self.area = width * height
         self.Ix = width * height ** 3 / 12
         self.Iy = width ** 3 * height / 12
+
+    def set_size(self, width, height):
+        self._set_size(width, height)
 
     def shape(self, x, y):
         return (
@@ -54,3 +57,6 @@ class Rectangular(Base):
 class Square(Rectangular):
     def __init__(self, *args, width=None, **kwargs):
         super().__init__(*args, width=width, height=width, **kwargs)
+
+    def set_size(self, width):
+        super()._set_size(width, width)
