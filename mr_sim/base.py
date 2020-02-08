@@ -12,17 +12,20 @@ class Base:
         self.profile = np.zeros(self.X.shape)
         self.dt = dt
         self.auto_vel = auto_velocity
-        self.x = 0
-        self.y = 0
+        self.x = None
+        self.y = None
 
-    def location(self, x=0, y=0):
+    def set_location(self, x=0, y=0):
         if self.auto_vel:
+            if self.x is None or self.y is None:
+                self.x = x
+                self.y = y
             self.vl_x = (x - self.x) / self.dt
             self.vl_y = (y - self.y) / self.dt
         self.x = x
         self.y = y
 
-    def velocity(self, x=0, y=0):
+    def set_velocity(self, x=0, y=0):
         self.vl_x = x
         self.vl_y = y
 
@@ -35,4 +38,4 @@ class Base:
 
     def plot(self, **kwargs):
         plt.pcolor(self.X, self.Y, self.profile, edgecolors="face", **kwargs)
-        plt.gca().set_aspect('equal', 'box')
+        plt.gca().set_aspect("equal", "box")
