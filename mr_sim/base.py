@@ -14,6 +14,8 @@ class Base:
         self.auto_vel = auto_velocity
         self.x = None
         self.y = None
+        self.vl_x = 0
+        self.vl_y = 0
 
     def set_location(self, x=0, y=0):
         if self.auto_vel:
