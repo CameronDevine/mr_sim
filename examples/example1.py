@@ -7,6 +7,7 @@ length = 208 / 1000
 period = 0.2 * 20
 dt = period / 1000
 dt = dt / 4
+print(dt)
 amp = length / 2
 
 Simulation = mr_sim.create_simulation(
@@ -27,7 +28,7 @@ simulation.set_speed(620)
 simulation.set_force(15)
 
 for t in np.arange(0, period / 2, dt):
-    simulation.location(amp * np.cos(2 * t * np.pi / period))
+    simulation.set_location(amp * np.cos(2 * t * np.pi / period))
     simulation.step()
 
 plt.figure()
