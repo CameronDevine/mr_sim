@@ -17,6 +17,7 @@ class TestUtil(unittest.TestCase):
         test = Test()
         self.assertEqual(test.a, 1)
         self.assertEqual(test.b, 2)
+        self.assertFalse(hasattr(test, "c"))
         Test = mr_sim.create_simulation(A, B, C)
         test = Test()
         self.assertEqual(test.a, 1)
