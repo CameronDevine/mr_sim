@@ -3,7 +3,8 @@ python:
   - '3.6'
   - '3.7'
   - '3.8'
-include:
-  - python: '3.6'
-  - env: 'BLACK=1'
+jobs:
+  include:
+    - python: '3.6'
+      env: 'BLACK=1'
 script: if [ "$BLACK" == 1 ]; then black --check .; else python -m unittest discover tests/; fi
