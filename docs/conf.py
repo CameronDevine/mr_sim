@@ -2,8 +2,9 @@ import os, sys
 
 sys.path.insert(0, os.path.abspath(".."))
 
-project = "mr_sim"
+project = "MR Sim"
 copyright = "2020, Cameron Devine"
+author = "Cameron Devine"
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.mathjax",
