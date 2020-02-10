@@ -16,6 +16,7 @@ class Orbital(Base):
         rotational_speed (float): The current rotational speed of the pad with
             with respect to the part surface.
     """
+
     def __init__(self, *args, eccentricity=None, **kwargs):
         """
         Args:
@@ -79,6 +80,7 @@ class Belt(Base):
     Attributes:
         speed (float): The current speed of the belt.
     """
+
     def __init__(self, *args, **kwargs):
         """
         Args:
@@ -125,6 +127,7 @@ class Rotary(Base):
     Attributes:
         speed (float): The current rotational speed of the tool.
     """
+
     def __init__(self, *args, **kwargs):
         """
         Args:

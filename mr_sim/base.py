@@ -33,6 +33,7 @@ class Base:
         Other classes must be used to include the ``shape`` and ``mrr`` methods needed
         by this class.
     """
+
     def __init__(self, size_x, size_y, dx=0.001, dy=0.001, dt=1, auto_velocity=False):
         """
         Args:

@@ -48,8 +48,4 @@ class Preston(Base):
             numpy.ndarray: The material removal rate at all locations on the part
             surface.
         """
-        return (
-            self.kp
-            * self.pressure(x, y)
-            * self.velocity(x, y)
-        )
+        return self.kp * self.pressure(x, y) * self.velocity(x, y)

@@ -20,6 +20,7 @@ class Flat(Base):
     Note:
         This class requires ``area``, ``Ix``, and ``Iy`` to be set by a subclass.
     """
+
     def __init__(self, *args, **kwargs):
         """
         Args:
