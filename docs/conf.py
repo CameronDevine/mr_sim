@@ -14,3 +14,4 @@ extensions = [
 pygments_style = "sphinx"
 html_theme = "sphinx_rtd_theme"
 autoclass_content = "both"
+master_doc = "index"
