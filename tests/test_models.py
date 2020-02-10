@@ -24,7 +24,7 @@ class TestPreston(unittest.TestCase):
         preston.set_location()
         self.assertTrue(
             np.allclose(
-                preston.mrr(),
+                preston.mrr(preston.X, preston.Y),
                 4 * (0.5 * preston.X + 0.15 * preston.Y) * (0.1 * preston.Y ** 2),
             )
         )

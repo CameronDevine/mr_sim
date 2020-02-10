@@ -72,8 +72,8 @@ class TestBase(unittest.TestCase):
 
     def test_step(self):
         class Test(Base):
-            def mrr(self):
-                return self.X
+            def mrr(self, x, y):
+                return x + 0.2 * y
 
             def shape(self, x, y):
                 return x ** 2 + y ** 2 <= 0.1 ** 2
@@ -83,5 +83,7 @@ class TestBase(unittest.TestCase):
         self.assertTrue(np.allclose(test.profile, 0))
         test.step()
         shape = test.shape(*test.local_grid())
-        self.assertTrue(np.allclose(test.profile[shape], (test.X * 0.1)[shape]))
+        self.assertTrue(
+            np.allclose(test.profile[shape], ((test.X + 0.2 * test.Y) * 0.1)[shape])
+        )
         self.assertTrue(np.allclose(test.profile[~shape], 0))
