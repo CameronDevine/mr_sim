@@ -1,4 +1,4 @@
-.PHONY: test format dist all clean
+.PHONY: test format dist all clean docs
 
 all: format test
 
@@ -8,11 +8,14 @@ test:
 format:
 	black .
 
+docs:
+	sphinx-build docs/ docs/build
+
 dist:
 	python3 setup.py sdist bdist_wheel
 	python2 setup.py bdist_wheel
 
 clean:
-	rm -rf dist build mr_sim.egg-info
+	rm -rf dist build mr_sim.egg-info docs/build
 	find . -type f -name *.pyc -delete
 	find . -type d -name __pycache__ -delete
