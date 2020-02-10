@@ -13,7 +13,6 @@ docs:
 
 dist:
 	python3 setup.py sdist bdist_wheel
-	python2 setup.py bdist_wheel
 
 clean:
 	rm -rf dist build mr_sim.egg-info docs/build
