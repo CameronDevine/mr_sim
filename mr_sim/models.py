@@ -33,7 +33,7 @@ class Preston(Base):
         super().__init__(*args, **kwargs)
         self.kp = kp
 
-    def mrr(self):
+    def mrr(self, x, y):
         """Calculates the material removal rate.
 
         This function returns the material removal rate for all locations on the
@@ -50,6 +50,6 @@ class Preston(Base):
         """
         return (
             self.kp
-            * self.pressure(*self.local_grid())
-            * self.velocity(*self.local_grid())
+            * self.pressure(x, y)
+            * self.velocity(x, y)
         )
