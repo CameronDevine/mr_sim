@@ -72,8 +72,6 @@ class TestBase(unittest.TestCase):
 
     def test_step(self):
         class Test(Base):
-            area = 3
-
             def mrr(self):
                 return self.X
 
@@ -85,5 +83,5 @@ class TestBase(unittest.TestCase):
         self.assertTrue(np.allclose(test.profile, 0))
         test.step()
         shape = test.shape(*test.local_grid())
-        self.assertTrue(np.allclose(test.profile[shape], (test.X * 0.1 / 3)[shape]))
+        self.assertTrue(np.allclose(test.profile[shape], (test.X * 0.1)[shape]))
         self.assertTrue(np.allclose(test.profile[~shape], 0))

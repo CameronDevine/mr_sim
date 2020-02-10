@@ -101,7 +101,7 @@ class Base:
     def step(self):
         """Move the simulation forward one timestep."""
         shape = self.shape(*self.local_grid())
-        self.profile[shape] += self.mrr()[shape] * self.dt / self.area
+        self.profile[shape] += self.mrr(*self.local_grid())[shape] * self.dt
 
     def plot(self, **kwargs):
         """Plot the simulation result.
