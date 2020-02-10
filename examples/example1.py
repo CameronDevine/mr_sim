@@ -7,7 +7,6 @@ length = 208 / 1000
 period = 0.2 * 20
 dt = period / 1000
 dt = dt / 4
-print(dt)
 amp = length / 2
 
 Simulation = mr_sim.create_simulation(
