@@ -1,4 +1,4 @@
-.PHONY: test format dist all clean docs
+.PHONY: test format dist all clean docs upload upload-test
 
 all: format test
 
@@ -13,6 +13,12 @@ docs:
 
 dist:
 	python3 setup.py sdist bdist_wheel
+
+upload:
+	twine upload dist/*
+
+upload-test:
+	twine upload dist/* --repository-url https://test.pypi.org/legacy/
 
 clean:
 	rm -rf dist build mr_sim.egg-info docs/build

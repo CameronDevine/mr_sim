@@ -27,4 +27,5 @@ setup(
     ],
     python_requires=">=3.4",
     install_requires=["numpy"],
+    url="https://github.com/CameronDevine/mr_sim",
 )
