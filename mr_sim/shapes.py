@@ -171,4 +171,4 @@ class Square(Rectangular):
         Args:
             width (float): The width of the tool.
         """
-        super()._set_size(width, width)
+        self._set_size(width, width)
