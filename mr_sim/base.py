@@ -112,7 +112,12 @@ class Base:
 
         Args:
             **kwargs: Keyword arguments to be included in the call to the
-                ``matplotlib.pyplot.pcolor`` function.
+                ``matplotlib.pyplot.imshow`` function.
         """
-        plt.pcolor(self.X, self.Y, self.profile, edgecolors="face", **kwargs)
-        plt.gca().set_aspect("equal", "box")
+        plt.imshow(
+            self.profile,
+            aspect="equal",
+            origin="lower",
+            extent=(self.X.min(), self.X.max(), self.Y.min(), self.Y.max()),
+            **kwargs
+        )
