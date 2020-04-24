@@ -50,3 +50,84 @@ class TestFlat(unittest.TestCase):
         self.assertTrue(hasattr(flat, "profile"))
         self.assertTrue(hasattr(flat, "dt"))
         self.assertEqual(flat.dt, 0.5)
+
+
+class TestConstantCurvature(unittest.TestCase):
+    def test_init(self):
+        with self.assertRaises(ValueError):
+            cc = mr_sim.ConstantCurvature(1, 1, kx=1, ky=2, dx=0.002, dy=0.002)
+        cc = mr_sim.ConstantCurvature(
+            1, 1, kx=1, ky=2, stiffness=100, dx=0.002, dy=0.002
+        )
+        self.assertEqual(cc.force, 0)
+        self.assertEqual(cc.kx, 1)
+        self.assertEqual(cc.ky, 2)
+        self.assertEqual(cc.stiffness, 100)
+        self.assertEqual(cc.dx, 0.002)
+        self.assertEqual(cc.dy, 0.002)
+        self.assertAlmostEqual(cc.X[0, 1] - cc.X[0, 0], 0.002)
+        self.assertAlmostEqual(cc.Y[1, 0] - cc.Y[0, 0], 0.002)
+
+    def test_force_setter(self):
+        cc = mr_sim.ConstantCurvature(
+            1, 1, kx=1, ky=2, stiffness=100, dx=0.002, dy=0.002
+        )
+        cc.set_force(3)
+        self.assertEqual(cc.force, 3)
+
+    def test_curvature_setter(self):
+        cc = mr_sim.ConstantCurvature(
+            1, 1, kx=1, ky=2, stiffness=100, dx=0.002, dy=0.002
+        )
+        cc.set_curvature(kx=4)
+        self.assertEqual(cc.kx, 4)
+        cc.set_curvature(ky=5)
+        self.assertEqual(cc.ky, 5)
+        cc.set_curvature(6, 7)
+        self.assertEqual(cc.kx, 6)
+        self.assertEqual(cc.ky, 7)
+        cc.set_curvature(8)
+        self.assertEqual(cc.kx, 8)
+
+    def test_pressure_square(self):
+        dx = 0.001
+        dy = 0.001
+        Sim = mr_sim.create_simulation(mr_sim.Square, mr_sim.ConstantCurvature)
+        sim = Sim(1, 1, kx=0.2, ky=0.4, stiffness=1e7, dx=dx, dy=dy, width=0.1)
+        shape = sim.shape(sim.X, sim.Y)
+        sim.set_force(5)
+        p = sim.pressure(sim.X, sim.Y)
+        self.assertAlmostEqual(np.sum(p) * dx * dy, sim.force, 6)
+        self.assertFalse(np.any(p[~shape] != 0))
+        sim.set_force(20)
+        p = sim.pressure(sim.X, sim.Y)
+        self.assertAlmostEqual(np.sum(p) * dx * dy, sim.force, 6)
+        self.assertFalse(np.any(p[~shape] != 0))
+
+    def test_pressure_round(self):
+        dx = 0.001
+        dy = 0.001
+        Sim = mr_sim.create_simulation(mr_sim.Round, mr_sim.ConstantCurvature)
+        sim = Sim(1, 1, kx=0.2, ky=0.4, stiffness=1e7, dx=dx, dy=dy, radius=0.05)
+        shape = sim.shape(sim.X, sim.Y)
+        p = sim.pressure(sim.X, sim.Y)
+        self.assertAlmostEqual(np.sum(p) * dx * dy, sim.force, 6)
+        self.assertFalse(np.any(p[~shape] != 0))
+        sim.set_force(5)
+        p = sim.pressure(sim.X, sim.Y)
+        self.assertAlmostEqual(np.sum(p) * dx * dy, sim.force, 6)
+        self.assertFalse(np.any(p[~shape] != 0))
+        sim.set_force(20)
+        p = sim.pressure(sim.X, sim.Y)
+        self.assertAlmostEqual(np.sum(p) * dx * dy, sim.force, 6)
+        self.assertFalse(np.any(p[~shape] != 0))
+
+    def test_base(self):
+        cc = mr_sim.ConstantCurvature(
+            1, 1, kx=1, ky=2, stiffness=100, dx=0.002, dy=0.002, dt=0.2
+        )
+        self.assertTrue(hasattr(cc, "X"))
+        self.assertTrue(hasattr(cc, "Y"))
+        self.assertTrue(hasattr(cc, "profile"))
+        self.assertTrue(hasattr(cc, "dt"))
+        self.assertEqual(cc.dt, 0.2)

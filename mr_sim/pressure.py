@@ -1,6 +1,8 @@
 from .base import Base
+import numpy as np
+from scipy.optimize import minimize_scalar
 
-__all__ = ["Flat"]
+__all__ = ["Flat", "ConstantCurvature"]
 
 
 class Flat(Base):
@@ -70,3 +72,99 @@ class Flat(Base):
             + x * self.torque_y / self.Iy
             - y * self.torque_x / self.Ix
         )
+
+
+class ConstantCurvature(Base):
+    """A class used to calculate the pressure applied to a surface with constant curvature.
+
+    This class determines the pressure applied to the surface from the
+    normal force.
+
+    Note:
+        This class models the contact pressure as a paraboloid with the specified
+        curvature at the tool origin.
+
+    Attributes:
+        force (float): The normal force applied to the tool.
+        kx (float): The curvature in the x direction.
+        ky (float): The curvature in the y direction.
+        dx (float): The x direction spacing of the grid.
+        dy (float): The y direction spacing of the grid.
+        stiffness (float): The stiffness of the tool.
+            This can be found as the Young's modulus of the tool divided by
+            its thickness.
+    """
+
+    def __init__(self, *args, kx=0, ky=0, stiffness=None, dx=0.001, dy=0.001, **kwargs):
+        """
+        Args:
+            *args: Arguments to be passed on to superclasses.
+            kx (float): The curvature in the x direction. Defaults to 0.
+            ky (float): The curvature in the y direction. Defaults to 0.
+            stiffness (float): The stiffness of the sanding tool. Defaults to ``None``.
+                This can be found as the Young's modulus of the tool divided by
+                its thickness.
+            dx (float): The x direction spacing of the grid. Defaults to 0.001.
+            dy (float): The y direction spacing of the grid. Defaults to 0.001.
+            **kwargs: Keyword arguments to be passed on to superclasses.
+
+        Raises:
+            ValueError: If ``stiffness`` is ``None``.
+        """
+        super().__init__(*args, dx=dx, dy=dy, **kwargs)
+        self.force = 0
+        self.kx = kx
+        self.ky = ky
+        if stiffness is None:
+            raise ValueError("tool stiffness must be set")
+        self.stiffness = stiffness
+        self.dx = dx
+        self.dy = dy
+
+    def set_curvature(self, kx=0, ky=0):
+        """Set the curvature of the surface.
+
+        Args:
+            kx (float): The curvature in the x direction. Defaults to 0.
+            ky (float): The curvature in the y direction. Defaults to 0.
+        """
+        self.kx = kx
+        self.ky = ky
+
+    def set_force(self, force):
+        """Set the current normal force applied to the tool.
+
+        Args:
+            force (float): The current normal force.
+        """
+        self.force = force
+
+    def pressure(self, x, y):
+        """Determine the pressure the tool applied to the part surface.
+
+        This function calculates the pressure applied at all points on the part
+        surface.
+
+        Args:
+            x (numpy.ndarray): A 2D array of the X coordinates of the part centered
+                at the current tool location.
+            y (numpy.ndarray): A 2D array of the Y coordinates of the part centered
+                at the current tool location.
+
+        Returns:
+            numpy.ndarray: A 2D array of the pressure applied by the tool.
+        """
+        shape = self.shape(x, y)
+
+        def pressure(d):
+            p = self.stiffness * (d - self.kx * x ** 2 / 2 - self.ky * y ** 2 / 2)
+            p *= shape * (p > 0)
+            return p
+
+        res = minimize_scalar(
+            lambda d: (np.sum(pressure(d)) * self.dx * self.dy - self.force) ** 2,
+            bracket=(0.0001, 0.0002),
+        )
+        d = res.x
+        p = pressure(d)
+        return p
