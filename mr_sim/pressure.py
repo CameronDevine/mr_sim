@@ -72,7 +72,7 @@ class Flat(Base):
             self.force / self.area
             + x * self.torque_y / self.Iy
             - y * self.torque_x / self.Ix
-        )
+        ) * self.shape(x, y)
 
 
 class ConstantCurvature(Base):
