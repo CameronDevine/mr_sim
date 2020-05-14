@@ -26,6 +26,6 @@ setup(
         "Programming Language :: Python :: 3.8",
     ],
     python_requires=">=3.4",
-    install_requires=["numpy"],
+    install_requires=["numpy", "scipy"],
     url="https://github.com/CameronDevine/mr_sim",
 )
