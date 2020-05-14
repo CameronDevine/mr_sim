@@ -4,7 +4,51 @@ import numpy as np
 __all__ = ["Round", "Rectangular", "Square"]
 
 
-class Round(Base):
+class BaseShape(Base):
+    """A base class for all shapes providing the antialiasing function.
+
+    Attributes:
+        antialias (bool): A boolean indicating whether or not to antialias the shape.
+        antialias_dist (float): The distance over which to change from covered to
+            uncovered by the tool.
+    """
+
+    def __init__(self, *args, antialias=True, antialias_dist=None, **kwargs):
+        """
+        Args:
+            *args: Arguments to be passed on to superclasses.
+            antialias (bool): Whether the bounds of the tool should be antialiased.
+                Defaults to ``True``.
+            antialias_dist (float): The distance over which to change from convered
+                to uncovered. Defaults to :math:`\sqrt{dx^2+dy^2}`.
+            **kwargs: Keyword arguments to be passed on to superclasses.
+        """
+        super().__init__(*args, **kwargs)
+        self.antialias = antialias
+        self.antialias_dist = antialias_dist
+        if self.antialias_dist is None:
+            self.antialias_dist = np.sqrt(self.dx ** 2 + self.dy ** 2)
+
+    def _antialias(self, x):
+        """
+
+        Args:
+            x (numpy.ndarray): The input array.
+
+        Returns:
+            numpy.ndarray: The output array with a value of ``1`` when ``x<0``
+            and ``0`` when ``x>0`` with the transition spread over a distance
+            ``antialias_dist``.
+        """
+        if self.antialias:
+            return (x < -self.antialias_dist) + (
+                x - self.antialias_dist
+            ) / self.antialias_dist * (self.antialias_dist > x > -self.antialias_dist)
+        else:
+            return self.antialias
+
+
+class Round(BaseShape):
     """A class representing a round tool for material removal simulations.
 
     This class represents a round tool and calculates the section of the part
@@ -62,10 +106,10 @@ class Round(Base):
             numpy.ndarray: A 2D array where ``True`` indicates the tool is in contact
             with that portion of the part surface.
         """
-        return x ** 2 + y ** 2 <= self.r ** 2
+        return self._antialias(x ** 2 + y ** 2 - self.r ** 2)
 
 
-class Rectangular(Base):
+class Rectangular(BaseShape):
     """A class representing a rectangular tool for material removal simulations.
 
     This class represents a rectangular tool and calculates the section of the
@@ -134,10 +178,10 @@ class Rectangular(Base):
             with that portion of the part surface.
         """
         return (
-            (-(self.width / 2) <= x)
-            & ((self.width / 2) >= x)
-            & (-(self.height / 2) <= y)
-            & ((self.height / 2) >= y)
+            self._antialias((self.width / 2) + x)
+            * self._antialias((self.width / 2) - x)
+            * self._antialias((self.height / 2) + y)
+            * self._antialias((self.height / 2) - y)
         )
 
 
