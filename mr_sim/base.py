@@ -11,6 +11,8 @@ class Base:
     other attributes about the simulation.
 
     Attributes:
+        dx (float): The X axis spacing of ``profile``.
+        dy (float): The Y axis spacing of ``profile``.
         X (numpy.ndarray): A 2D array of the X coordinates of the part with the
             origin at the center of the part surface.
         Y (numpy.ndarray): A 2D array of the Y coordinates of the part with the
@@ -47,6 +49,8 @@ class Base:
             auto_velocity (bool): If ``True`` automatically calculate the linear
                 velocity of the tool over the part surface.
         """
+        self.dx = dx
+        self.dy = dy
         x = np.arange(-size_x / 2, size_x / 2, dx)
         y = np.arange(-size_y / 2, size_y / 2, dy)
         self.X, self.Y = np.meshgrid(x, y)
