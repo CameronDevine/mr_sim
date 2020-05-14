@@ -90,11 +90,14 @@ class TestConstantCurvature(unittest.TestCase):
         self.assertEqual(cc.kx, 8)
 
     def test_pressure_square(self):
-        dx = 0.001
-        dy = 0.001
+        dx = 0.0001
+        dy = 0.0001
         Sim = mr_sim.create_simulation(mr_sim.Square, mr_sim.ConstantCurvature)
-        sim = Sim(1, 1, kx=0.2, ky=0.4, stiffness=1e7, dx=dx, dy=dy, width=0.1)
+        sim = Sim(0.2, 0.2, kx=0.2, ky=0.4, stiffness=1e7, dx=dx, dy=dy, width=0.1)
         shape = sim.shape(sim.X, sim.Y)
+        p = sim.pressure(sim.X, sim.Y)
+        self.assertAlmostEqual(np.sum(p) * dx * dy, sim.force)
+        self.assertFalse(np.any(p[~shape] != 0))
         sim.set_force(5)
         p = sim.pressure(sim.X, sim.Y)
         self.assertAlmostEqual(np.sum(p) * dx * dy, sim.force, 6)
@@ -105,19 +108,23 @@ class TestConstantCurvature(unittest.TestCase):
         self.assertFalse(np.any(p[~shape] != 0))
 
     def test_pressure_round(self):
-        dx = 0.001
-        dy = 0.001
+        dx = 0.0001
+        dy = 0.0001
         Sim = mr_sim.create_simulation(mr_sim.Round, mr_sim.ConstantCurvature)
-        sim = Sim(1, 1, kx=0.2, ky=0.4, stiffness=1e7, dx=dx, dy=dy, radius=0.05)
+        sim = Sim(0.2, 0.2, kx=0.2, ky=0.4, stiffness=1e7, dx=dx, dy=dy, radius=0.05)
         shape = sim.shape(sim.X, sim.Y)
         p = sim.pressure(sim.X, sim.Y)
-        self.assertAlmostEqual(np.sum(p) * dx * dy, sim.force, 6)
+        self.assertAlmostEqual(np.sum(p) * dx * dy, sim.force)
         self.assertFalse(np.any(p[~shape] != 0))
         sim.set_force(5)
         p = sim.pressure(sim.X, sim.Y)
         self.assertAlmostEqual(np.sum(p) * dx * dy, sim.force, 6)
         self.assertFalse(np.any(p[~shape] != 0))
         sim.set_force(20)
+        p = sim.pressure(sim.X, sim.Y)
+        self.assertAlmostEqual(np.sum(p) * dx * dy, sim.force, 6)
+        self.assertFalse(np.any(p[~shape] != 0))
+        sim.set_force(60)
         p = sim.pressure(sim.X, sim.Y)
         self.assertAlmostEqual(np.sum(p) * dx * dy, sim.force, 6)
         self.assertFalse(np.any(p[~shape] != 0))

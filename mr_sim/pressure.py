@@ -1,4 +1,5 @@
 from .base import Base
+from .shapes import *
 import numpy as np
 from scipy.optimize import minimize_scalar
 
@@ -153,6 +154,10 @@ class ConstantCurvature(Base):
 
         Returns:
             numpy.ndarray: A 2D array of the pressure applied by the tool.
+
+        Note:
+            This function uses closed form solutions if the shape is :class:`.Round`,
+            otherwise it uses :meth:`scipy.optimize.minimize_scalar` which is slow.
         """
         shape = self.shape(x, y)
 
@@ -161,10 +166,24 @@ class ConstantCurvature(Base):
             p *= shape * (p > 0)
             return p
 
-        res = minimize_scalar(
-            lambda d: (np.sum(pressure(d)) * self.dx * self.dy - self.force) ** 2,
-            bracket=(0.0001, 0.0002),
-        )
-        d = res.x
-        p = pressure(d)
-        return p
+        if isinstance(self, Round):
+            d = np.sqrt(
+                self.force * np.sqrt(self.kx * self.ky) / (self.stiffness * np.pi)
+            )
+            if self.radius >= np.sqrt(2 * d / min(self.kx, self.ky)):
+                return pressure(d)
+            d = (
+                self.force / (self.stiffness * np.pi * self.radius ** 2)
+                + self.radius ** 2 * (self.kx + self.ky) / 8
+            )
+            if self.radius <= np.sqrt(2 * d / max(self.kx, self.ky)):
+                return pressure(d)
+
+        def objective(d):
+            return (np.sum(pressure(d)) * self.dx * self.dy - self.force) ** 2
+
+        start = self.force / (self.area * self.stiffness)
+
+        res = minimize_scalar(objective, bracket=(start, 2 * start))
+
+        return pressure(res.x)
