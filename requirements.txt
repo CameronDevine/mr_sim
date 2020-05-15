@@ -6,3 +6,4 @@ sphinx_math_dollar
 sphinx_rtd_theme
 sphinx
 scipy
+trimesh
