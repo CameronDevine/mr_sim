@@ -271,6 +271,7 @@ class STL(Base):
         set_point = np.array([self.x, self.y, vertex_point[2]])
         normal = data[3:]
         point = np.dot(vertex_point - set_point, normal) * normal + set_point
+        # https://math.stackexchange.com/a/476311
         vx = np.array(
             [[0, 0, -normal[0]], [0, 0, -normal[1]], [normal[0], normal[1], 0]]
         )
