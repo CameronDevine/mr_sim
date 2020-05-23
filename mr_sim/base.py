@@ -104,18 +104,23 @@ class Base:
         grid = self.local_grid()
         self.profile += self.dt * self.mrr(*grid)
 
-    def plot(self, **kwargs):
+    def plot(self, normalize=False, **kwargs):
         """Plot the simulation result.
 
         This function uses matplotlib to plot the result of the simulation in the
         current figure.
 
         Args:
+            normalize (bool): Normalize max depth of material removed to 1. Defaults
+                to ``False``.
             **kwargs: Keyword arguments to be included in the call to the
                 ``matplotlib.pyplot.imshow`` function.
         """
+        data = self.profile
+        if normalize:
+            data /= data.max()
         plt.imshow(
-            self.profile,
+            data,
             aspect="equal",
             origin="lower",
             extent=(self.X.min(), self.X.max(), self.Y.min(), self.Y.max()),
