@@ -115,11 +115,14 @@ class Base:
                 to ``False``.
             **kwargs: Keyword arguments to be included in the call to the
                 ``matplotlib.pyplot.imshow`` function.
+
+        Returns:
+            matplotlib.image.AxesImage: The ``AxesImage`` object of the plotted heatmap.
         """
         data = self.profile
         if normalize:
             data /= data.max()
-        plt.imshow(
+        return plt.imshow(
             data,
             aspect="equal",
             origin="lower",
