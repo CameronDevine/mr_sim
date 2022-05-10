@@ -5,7 +5,7 @@ with open("README.md") as f:
 
 setup(
     name="mr_sim",
-    version="0.3.0",
+    version="1.0.0",
     author="Cameron Devine",
     author_email="camdev@uw.edu",
     description="A package for the simulation of abrasive material removal processes.",
@@ -26,6 +26,6 @@ setup(
         "Programming Language :: Python :: 3.8",
     ],
     python_requires=">=3.4",
-    install_requires=["numpy", "scipy", "trimesh"],
+    install_requires=["numpy", "scipy"],
     url="https://github.com/CameronDevine/mr_sim",
 )
