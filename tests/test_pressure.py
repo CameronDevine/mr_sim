@@ -28,16 +28,15 @@ class TestFlat(unittest.TestCase):
         self.assertEqual(flat.force, 6)
 
     def test_pressure(self):
-        flat = mr_sim.Flat(1, 1)
+        Sim = mr_sim.create_simulation(mr_sim.Flat, mr_sim.Rectangular)
+        flat = Sim(1, 1, width=2, height=1.5)
         flat.set_force(6)
         flat.set_torque(-2, 3)
-        flat.area = 4
-        flat.Ix = 2
-        flat.Iy = 3
         pressure = flat.pressure(flat.X, flat.Y)
         self.assertTrue(
             np.allclose(
-                flat.pressure(flat.X, flat.Y), 6 / 4 + flat.X * 3 / 3 - flat.Y * -2 / 2
+                pressure,
+                flat.force / flat.area + flat.X * 3 / flat.Iy - flat.Y * -2 / flat.Ix,
             )
         )
         self.assertGreater(pressure[0, -1], pressure[0, 0])
@@ -126,7 +125,7 @@ class TestConstantCurvature(unittest.TestCase):
         self.assertFalse(np.any(p[~shape] != 0))
         sim.set_force(60)
         p = sim.pressure(sim.X, sim.Y)
-        self.assertAlmostEqual(np.sum(p) * dx * dy, sim.force, 6)
+        self.assertAlmostEqual(np.sum(p) * dx * dy, sim.force, 2)
         self.assertFalse(np.any(p[~shape] != 0))
 
     def test_base(self):
