@@ -210,6 +210,7 @@ class STL(Base):
             thickness.
         mesh (trimesh.Trimesh): The mesh of the part surface.
     """
+
     def __init__(self, *args, dx=0.001, dy=0.001, stiffness=None, mesh=None, **kwargs):
         """
         Args:
@@ -268,7 +269,10 @@ class STL(Base):
         Returns:
             numpy.ndarray: A 2D array of the pressure applied by the tool.
         """
-        interpolator = NearestNDInterpolator(self.mesh.vertices[:, :2], np.hstack((self.mesh.vertices, self.mesh.vertex_normals)))
+        interpolator = NearestNDInterpolator(
+            self.mesh.vertices[:, :2],
+            np.hstack((self.mesh.vertices, self.mesh.vertex_normals)),
+        )
         data = interpolator(np.array([self.x, self.y])).flatten()
         vertex_point = data[:3]
         set_point = np.array([self.x, self.y, vertex_point[2]])
@@ -289,13 +293,17 @@ class STL(Base):
             d_transform = transform.copy()
             d_transform[2, 3] += d
             mesh.apply_transform(d_transform)
-            interpolator = LinearNDInterpolator(mesh.vertices[:, :2], mesh.vertices[:, 2], fill_value=0)
-            p = self.stiffness * interpolator(np.vstack((x.reshape(-1), y.reshape(-1))).T).reshape(x.shape)
+            interpolator = LinearNDInterpolator(
+                mesh.vertices[:, :2], mesh.vertices[:, 2], fill_value=0
+            )
+            p = self.stiffness * interpolator(
+                np.vstack((x.reshape(-1), y.reshape(-1))).T
+            ).reshape(x.shape)
             return p * (p > 0) * shape
 
         def objective(d):
             return pressure(d).sum() * self.dx * self.dy - self.force
 
-        res = root_scalar(objective, bracket=(0, 0.01), method='brentq')
+        res = root_scalar(objective, bracket=(0, 0.01), method="brentq")
 
         return pressure(res.root)
