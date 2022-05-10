@@ -169,6 +169,9 @@ class ConstantCurvature(Base):
             p *= shape * (p > 0)
             return p
 
+        if self.kx == 0 and self.ky == 0:
+            return pressure(self.force / (self.stiffness * self.area))
+
         if isinstance(self, Round):
             d = np.sqrt(
                 self.force * np.sqrt(self.kx * self.ky) / (self.stiffness * np.pi)

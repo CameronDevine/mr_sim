@@ -138,3 +138,12 @@ class TestConstantCurvature(unittest.TestCase):
         self.assertTrue(hasattr(cc, "profile"))
         self.assertTrue(hasattr(cc, "dt"))
         self.assertEqual(cc.dt, 0.2)
+
+    def test_pressure_flat(self):
+        Sim = mr_sim.create_simulation(mr_sim.Round, mr_sim.ConstantCurvature)
+        sim = Sim(
+            0.2, 0.2, kx=0, ky=0, stiffness=1e7, dx=0.0001, dy=0.0001, radius=0.05
+        )
+        sim.set_force(5)
+        p = sim.pressure(sim.X, sim.Y)
+        self.assertTrue(np.allclose(p[p > 0], sim.force / sim.area))
