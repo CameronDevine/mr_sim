@@ -5,7 +5,7 @@ with open("README.md") as f:
 
 setup(
     name="mr_sim",
-    version="1.0.0",
+    version="1.0.1",
     author="Cameron Devine",
     author_email="camdev@uw.edu",
     description="A package for the simulation of abrasive material removal processes.",
