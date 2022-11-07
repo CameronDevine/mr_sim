@@ -65,9 +65,7 @@ class Orbital(Base):
         """
         return np.sqrt(
             (self.eccentricity * self.orbital_speed) ** 2
-            + (x ** 2 + y ** 2) * self.rotational_speed ** 2
-            + self.vl_x ** 2
-            + self.vl_y ** 2
+            + (x**2 + y**2) * self.rotational_speed**2
         )
 
 
@@ -115,7 +113,7 @@ class Belt(Base):
         Returns:
             numpy.ndarray: A 2D array of velocity on the part surface.
         """
-        return np.sqrt(self.speed ** 2 + self.vl_x ** 2 + self.vl_y ** 2)
+        return self.speed
 
 
 class Rotary(Base):
@@ -162,6 +160,4 @@ class Rotary(Base):
         Returns:
             numpy.ndarray: A 2D array of velocity on the part surface.
         """
-        return np.sqrt(
-            (x ** 2 + y ** 2) * self.speed ** 2 + self.vl_x ** 2 + self.vl_y ** 2
-        )
+        return np.sqrt(x**2 + y**2) * self.speed

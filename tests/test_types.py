@@ -33,9 +33,7 @@ class TestOrbital(unittest.TestCase):
                 orbital.velocity(orbital.X, orbital.Y),
                 np.sqrt(
                     (0.01 * 7) ** 2
-                    + (np.sqrt(orbital.X ** 2 + orbital.Y ** 2) * 8) ** 2
-                    + 2 ** 2
-                    + 3 ** 2
+                    + (np.sqrt(orbital.X**2 + orbital.Y**2) * 8) ** 2
                 ),
             )
         )
@@ -63,11 +61,7 @@ class TestBelt(unittest.TestCase):
         belt = mr_sim.Belt(2, 2)
         belt.set_speed(4)
         belt.set_velocity(5, 7)
-        self.assertTrue(
-            np.allclose(
-                belt.velocity(belt.X, belt.Y), np.sqrt(4 ** 2 + 5 ** 2 + 7 ** 2)
-            )
-        )
+        self.assertTrue(np.allclose(belt.velocity(belt.X, belt.Y), 4))
 
     def test_base(self):
         belt = mr_sim.Belt(1, 1, dt=2)
@@ -95,9 +89,7 @@ class TestRotary(unittest.TestCase):
         self.assertTrue(
             np.allclose(
                 rotary.velocity(rotary.X, rotary.Y),
-                np.sqrt(
-                    (np.sqrt(rotary.X ** 2 + rotary.Y ** 2) * 5) ** 2 + 4 ** 2 + 2 ** 2
-                ),
+                np.sqrt(rotary.X**2 + rotary.Y**2) * 5,
             )
         )
 
